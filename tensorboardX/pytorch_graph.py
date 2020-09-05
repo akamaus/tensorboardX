@@ -376,7 +376,7 @@ def graph(model, args, verbose=False, use_cuda=False, **kwargs):
     from packaging import version
     assert version.parse(torch.__version__) >= version.parse("1.4.0"), "add_graph needs torch>=1.4.0"
 
-    with torch.onnx.set_training(model, False):  # TODO: move outside of torch.onnx
+    with torch.onnx.select_model_mode_for_export(model, torch.onnx.TrainingMode.EVAL):  # TODO: move outside of torch.onnx
         try:
             trace = torch.jit.trace(model, args)
             if type(trace) == torch.jit.ScriptModule:
